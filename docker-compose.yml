@@ -11,7 +11,7 @@ services:
     restart: always
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - C:/Users/amin_/OneDrive/Desktop/data-pipelines/data-pipeline-course/assignments/first-assignment/AminMasharqa/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+      - C:/Users/amin_/OneDrive/Desktop/amin-ibraheem-ahmad/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     networks:
       - aminmasharqa_default
 
@@ -21,7 +21,7 @@ services:
     ports:
       - "9324:9324"
     volumes:
-      - C:/Users/amin_/OneDrive/Desktop/data-pipelines/data-pipeline-course/assignments/first-assignment/AminMasharqa/sqs-create/queues.conf:/opt/elasticmq.conf
+      - C:/Users/amin_/OneDrive/Desktop/amin-ibraheem-ahmad/sqs-create/queues.conf:/opt/elasticmq.conf
     environment:
       - HOSTNAME=sqs
       - HOSTNAME_EXTERNAL=sqs
@@ -38,8 +38,6 @@ services:
     networks:
       - aminmasharqa_default
 
-
-
   sqs-create:
     image: amazon/aws-cli:latest
     container_name: sqs-create
@@ -47,7 +45,7 @@ services:
       sqs:
         condition: service_healthy
     volumes:
-      - C:/Users/amin_/OneDrive/Desktop/data-pipelines/data-pipeline-course/assignments/first-assignment/AminMasharqa/sqs-create:/sqs-create
+      - C:/Users/amin_/OneDrive/Desktop/amin-ibraheem-ahmad/sqs-create:/sqs-create
     environment:
       - AWS_ACCESS_KEY_ID=local
       - AWS_SECRET_ACCESS_KEY=local
@@ -57,7 +55,6 @@ services:
     restart: on-failure
     networks:
       - aminmasharqa_default
-
 
   scraper:
     build: ./lambda-scraper
@@ -118,4 +115,3 @@ networks:
 volumes:
   postgres-data:
     driver: local
-    

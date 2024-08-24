@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  elasticmq:
+    image: softwaremill/elasticmq
+    ports:
+      - "9324:9324"  # Default port for ElasticMQ
+    volumes:
+      - ./scrapers/scraper1/elasticmq.conf:/opt/elasticmq.conf  # Mount your combined config file
+    command: -Dconfig.file=/opt/elasticmq.conf  # Use the combined config file
+
+  scraper1:
+    build:
+      context: ./scrapers/scraper1
+      dockerfile: Dockerfile
+    depends_on:
+      - elasticmq
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-west-2
+    command: >
+      sh -c "until curl -s http://elasticmq:9324; do
+        echo 'Waiting for ElasticMQ to be ready...';
+        sleep 5;
+      done;
+      python handler.py"
+
+  scraper2:
+    build:
+      context: ./scrapers/scraper2
+      dockerfile: Dockerfile
+    depends_on:
+      - elasticmq
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-west-2
+    command: >
+      sh -c "until curl -s http://elasticmq:9324; do
+        echo 'Waiting for ElasticMQ to be ready...';
+        sleep 5;
+      done;
+      python handler.py"

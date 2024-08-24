@@ -4,27 +4,24 @@ services:
   elasticmq:
     image: softwaremill/elasticmq
     ports:
-      - "9324:9324"  # Default port for ElasticMQ
+      - "9324:9324"
     volumes:
-      - ./scrapers/scraper1/elasticmq.conf:/opt/elasticmq.conf  # Mount your combined config file
-    command: -Dconfig.file=/opt/elasticmq.conf  # Use the combined config file
+      - ./scrapers/scraper2/elasticmq.conf:/opt/elasticmq.conf
+    command: -Dconfig.file=/opt/elasticmq.conf
+    networks:
+      - default
 
-  scraper1:
-    build:
-      context: ./scrapers/scraper1
-      dockerfile: Dockerfile
-    depends_on:
-      - elasticmq
+  db:
+    image: postgres:13
     environment:
-      - AWS_ACCESS_KEY_ID=test
-      - AWS_SECRET_ACCESS_KEY=test
-      - AWS_DEFAULT_REGION=us-west-2
-    command: >
-      sh -c "until curl -s http://elasticmq:9324; do
-        echo 'Waiting for ElasticMQ to be ready...';
-        sleep 5;
-      done;
-      python handler.py"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: musicdb
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - default
 
   scraper2:
     build:
@@ -42,3 +39,29 @@ services:
         sleep 5;
       done;
       python handler.py"
+    networks:
+      - default
+
+  processor2:
+    build:
+      context: ./processor2
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - elasticmq
+    environment:
+      - DB_HOST=db
+      - DB_NAME=musicdb
+      - DB_USER=postgres
+      - DB_PASS=password
+    command: >
+      sh -c "until curl -s http://elasticmq:9324; do
+        echo 'Waiting for ElasticMQ to be ready...';
+        sleep 5;
+      done;
+      python processor2.py"
+    networks:
+      - default
+
+volumes:
+  db-data:

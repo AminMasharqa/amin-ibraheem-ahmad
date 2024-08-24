@@ -1,5 +1,11 @@
 [
     {
+        "rank": "1",
+        "title": "שוב אני בדד",
+        "artist": "Eyal Golan",
+        "distribution_date": "Aug 15, 2024"
+    },
+    {
         "rank": "2",
         "title": "אין אותי",
         "artist": "Osher Cohen",
@@ -73,14 +79,14 @@
     },
     {
         "rank": "14",
-        "title": "שובר לי ת'לב",
-        "artist": "Rinat Bar",
+        "title": "Die With A Smile",
+        "artist": "Lady Gaga",
         "distribution_date": "Aug 15, 2024"
     },
     {
         "rank": "15",
-        "title": "Die With A Smile",
-        "artist": "Lady Gaga",
+        "title": "שובר לי ת'לב",
+        "artist": "Rinat Bar",
         "distribution_date": "Aug 15, 2024"
     },
     {
@@ -97,15 +103,15 @@
     },
     {
         "rank": "18",
-        "title": "שילה אליה - תמיד אוהב אותי   (Prod. By RAZULII & LADINOS)(קאבר)",
-        "artist": "שילה אליה הערוץ הרשמי",
-        "distribution_date": "Aug 19, 2024"
-    },
-    {
-        "rank": "19",
         "title": "Ya Sidi Ensa",
         "artist": "Mortadha Ftiti",
         "distribution_date": "Aug 21, 2024"
+    },
+    {
+        "rank": "19",
+        "title": "שילה אליה - תמיד אוהב אותי   (Prod. By RAZULII & LADINOS)(קאבר)",
+        "artist": "שילה אליה הערוץ הרשמי",
+        "distribution_date": "Aug 19, 2024"
     },
     {
         "rank": "20",
@@ -127,27 +133,27 @@
     },
     {
         "rank": "23",
+        "title": "Taste (Official Video)",
+        "artist": "Sabrina Carpenter",
+        "distribution_date": "Aug 23, 2024"
+    },
+    {
+        "rank": "24",
         "title": "בחוף של טרפטוני",
         "artist": "מיתר רובין",
         "distribution_date": "Aug 8, 2024"
     },
     {
-        "rank": "24",
+        "rank": "25",
         "title": "GODMOTHER",
         "artist": "Noga Erez",
         "distribution_date": "Aug 20, 2024"
     },
     {
-        "rank": "25",
+        "rank": "26",
         "title": "מטומטמת",
         "artist": "ששון איפרם שאולוב",
         "distribution_date": "Jul 21, 2024"
-    },
-    {
-        "rank": "26",
-        "title": "Taste (Official Video)",
-        "artist": "Sabrina Carpenter",
-        "distribution_date": "Aug 23, 2024"
     },
     {
         "rank": "27",
@@ -157,26 +163,20 @@
     },
     {
         "rank": "28",
-        "title": "אין לי מקום אחר",
-        "artist": "Itay Levi",
-        "distribution_date": "Aug 7, 2024"
-    },
-    {
-        "rank": "29",
         "title": "שלוש בלילה",
         "artist": "Agam Buhbut",
         "distribution_date": "Aug 19, 2024"
+    },
+    {
+        "rank": "29",
+        "title": "אין לי מקום אחר",
+        "artist": "Itay Levi",
+        "distribution_date": "Aug 7, 2024"
     },
     {
         "rank": "30",
         "title": "הזיות",
         "artist": "Agam Buhbut",
         "distribution_date": "Aug 19, 2024"
-    },
-    {
-        "rank": "1",
-        "title": "שוב אני בדד",
-        "artist": "Eyal Golan",
-        "distribution_date": "Aug 15, 2024"
     }
 ]

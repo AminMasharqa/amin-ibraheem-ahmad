@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  elasticmq:
+    image: softwaremill/elasticmq
+    ports:
+      - "9324:9324"
+    volumes:
+      - ./scrapers/scraper2/elasticmq.conf:/opt/elasticmq.conf
+    command: -Dconfig.file=/opt/elasticmq.conf
+    networks:
+      - default
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: musicdb
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - default
+
+  scraper2:
+    build:
+      context: ./scrapers/scraper2
+      dockerfile: Dockerfile
+    depends_on:
+      - elasticmq
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-west-2
+    command: >
+      sh -c "until curl -s http://elasticmq:9324; do
+        echo 'Waiting for ElasticMQ to be ready...';
+        sleep 5;
+      done;
+      python handler.py"
+    networks:
+      - default
+
+  processor2:
+    build:
+      context: ./processor2
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - elasticmq
+    environment:
+      - DB_HOST=db
+      - DB_NAME=musicdb
+      - DB_USER=postgres
+      - DB_PASS=password
+    command: >
+      sh -c "until curl -s http://elasticmq:9324; do
+        echo 'Waiting for ElasticMQ to be ready...';
+        sleep 5;
+      done;
+      python processor2.py"
+    networks:
+      - default
+
+volumes:
+  db-data:

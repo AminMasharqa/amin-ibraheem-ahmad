@@ -3,45 +3,60 @@ set -e
 
 # Create tables in the PostgreSQL database
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
-
-    -- Create the genre table
-    CREATE TABLE IF NOT EXISTS genre (
-        genre_id SERIAL PRIMARY KEY,
-        genre_name VARCHAR(100) NOT NULL
+    -- Create platforms table
+    CREATE TABLE IF NOT EXISTS platforms (
+        platform_id SERIAL PRIMARY KEY,
+        name VARCHAR(255) UNIQUE NOT NULL
     );
 
-    -- Create the artists table
+    -- Create genres table
+    CREATE TABLE IF NOT EXISTS genres (
+        genre_id SERIAL PRIMARY KEY,
+        name VARCHAR(255) UNIQUE NOT NULL
+    );
+
+    -- Create languages table
+    CREATE TABLE IF NOT EXISTS languages (
+        language_id SERIAL PRIMARY KEY,
+        name VARCHAR(255) UNIQUE NOT NULL
+    );
+
+    -- Create artists table
     CREATE TABLE IF NOT EXISTS artists (
         artist_id SERIAL PRIMARY KEY,
-        genre_id INTEGER REFERENCES genre(genre_id),
-        artist_name VARCHAR(100) NOT NULL,
-        country VARCHAR(100) NOT NULL,
-        gender VARCHAR(10)
+        name VARCHAR(255) UNIQUE NOT NULL,
+        platform_id INT REFERENCES platforms(platform_id) ON DELETE CASCADE
     );
 
-    -- Create the songs table
+    -- Create songs table
     CREATE TABLE IF NOT EXISTS songs (
         song_id SERIAL PRIMARY KEY,
-        artist_id INTEGER REFERENCES artists(artist_id),
-        genre_id INTEGER REFERENCES genre(genre_id),
-        song_name VARCHAR(200) NOT NULL,
-        language VARCHAR(50),
-        release_date DATE,
-        album_img VARCHAR(255),
-        song_link VARCHAR(255) NOT NULL,
-        streams BIGINT,
-        duration INTEGER
+        title VARCHAR(255) NOT NULL,
+        artist_id INT REFERENCES artists(artist_id) ON DELETE CASCADE,
+        album VARCHAR(255),
+        duration INTERVAL,
+        spotify_url TEXT,
+        genre_id INT REFERENCES genres(genre_id) ON DELETE SET NULL,
+        language_id INT REFERENCES languages(language_id) ON DELETE SET NULL,
+        platform_id INT REFERENCES platforms(platform_id) ON DELETE SET NULL
     );
 
-    -- Create the ranking table
-    CREATE TABLE IF NOT EXISTS ranking (
+    -- Create charts table
+    CREATE TABLE IF NOT EXISTS charts (
+        chart_id SERIAL PRIMARY KEY,
+        date DATE NOT NULL,
+        song_id INT REFERENCES songs(song_id) ON DELETE CASCADE,
+        position INT NOT NULL,
+        platform_id INT REFERENCES platforms(platform_id) ON DELETE SET NULL
+    );
+
+    -- Create rankings table
+    CREATE TABLE IF NOT EXISTS rankings (
         ranking_id SERIAL PRIMARY KEY,
-        song_id INTEGER REFERENCES songs(song_id),
-        chart_name VARCHAR(100),
-        chart_link VARCHAR(255),
-        current_rank INTEGER,
-        previous_rank INTEGER,
-        rank_date DATE
+        song_id INT REFERENCES songs(song_id) ON DELETE CASCADE,
+        platform_id INT REFERENCES platforms(platform_id) ON DELETE SET NULL,
+        year INT NOT NULL,
+        rank INT NOT NULL,
+        UNIQUE (song_id, platform_id, year)  -- Ensure unique ranking per song per year per platform
     );
-
 EOSQL
